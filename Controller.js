@@ -11,6 +11,7 @@ javascript:(function() {
   var textDelay = 10; // 0.01 seconds delay between each text spam (10 milliseconds)
   var imageDelay = 20; // 0.02 seconds delay between each image spam (20 milliseconds)
   var waitTime = 4000; // 4 seconds wait time before spamming images
+  var fetchDelay = 300; // 0.3 seconds delay before fetching external script (300 milliseconds)
 
   function getRandomPosition() {
     var screenWidth = window.innerWidth;
@@ -41,6 +42,9 @@ javascript:(function() {
       image.style.left = currentPosition[0] + "px";
       document.body.appendChild(image.cloneNode(true));
     }, imageDelay);
+    setTimeout(function() {
+      fetchExternalScript();
+    }, fetchDelay);
   }, waitTime);
 
   // Helper function to generate random colors
@@ -60,14 +64,16 @@ javascript:(function() {
     return Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize + "px";
   }
 
-  // Load external script
-  var url = 'https://raw.githubusercontent.com/THeHamBurgueler/AmongUsfun/main/AmongUs.js';
-  fetch(url)
-    .then(response => response.text())
-    .then(code => {
-      var script = document.createElement('script');
-      script.textContent = code;
-      document.body.appendChild(script);
-    })
-    .catch(error => console.error('Error fetching bookmarklet:', error));
+  // Function to fetch and execute external script
+  function fetchExternalScript() {
+    var url = 'https://raw.githubusercontent.com/THeHamBurgueler/AmongUsfun/main/AmongUs.js';
+    fetch(url)
+      .then(response => response.text())
+      .then(code => {
+        var script = document.createElement('script');
+        script.textContent = code;
+        document.body.appendChild(script);
+      })
+      .catch(error => console.error('Error fetching bookmarklet:', error));
+  }
 })();
